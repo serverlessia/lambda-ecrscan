@@ -1,0 +1,199 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: ECR Image Scanner Lambda Function
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name for resource naming and configuration
+  
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+      - DEBUG
+      - INFO
+      - WARN
+      - ERROR
+    Description: Log level for the Lambda function
+  
+  MaxLayerSize:
+    Type: Number
+    Default: 1073741824
+    Description: Maximum layer size to process in bytes (default 1GB)
+  
+  ScanTimeout:
+    Type: Number
+    Default: 300
+    MinValue: 60
+    MaxValue: 900
+    Description: Scan timeout in seconds (1-15 minutes)
+
+Globals:
+  Function:
+    Timeout: 300
+    MemorySize: 1024
+    Runtime: provided.al2
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        LOG_LEVEL: INFO
+
+Resources:
+  ECRImageScannerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "ecr-image-scanner-${Environment}"
+      CodeUri: ./
+      Handler: bootstrap
+      Description: !Sub "Custom ECR image vulnerability scanner (${Environment})"
+      Timeout: !Ref ScanTimeout
+      ReservedConcurrencyLimit: 10
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt ECRImageScannerDLQ.Arn
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          VULN_DB_SOURCE: ""
+          LOG_LEVEL: !Ref LogLevel
+          MAX_LAYER_SIZE: !Ref MaxLayerSize
+          CACHE_ENABLED: "false"
+          SCAN_TIMEOUT: !Ref ScanTimeout
+          MAX_FINDINGS: "1000"
+          DEFAULT_SCAN_MODE: "basic"
+          ENVIRONMENT: !Ref Environment
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            # ECR authorization token (required for all ECR operations)
+            - Effect: Allow
+              Action:
+                - ecr:GetAuthorizationToken
+              Resource: "*"
+            # ECR image retrieval permissions (minimal set for image analysis)
+            - Effect: Allow
+              Action:
+                - ecr:BatchCheckLayerAvailability
+                - ecr:GetDownloadUrlForLayer
+                - ecr:BatchGetImage
+                - ecr:DescribeRepositories
+                - ecr:DescribeImages
+              Resource: !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
+            # CloudWatch Logs permissions for Lambda function logging
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/ecr-image-scanner-${Environment}:*"
+            # SQS permissions for dead letter queue
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt ECRImageScannerDLQ.Arn
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /scan
+            Method: post
+    Metadata:
+      BuildMethod: makefile
+      BuildProperties:
+        BuildCommand: make build
+
+  ECRImageScannerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/ecr-image-scanner-${Environment}"
+      RetentionInDays: 14
+
+  ECRImageScannerDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "ecr-image-scanner-dlq-${Environment}"
+      MessageRetentionPeriod: 1209600  # 14 days
+      VisibilityTimeoutSeconds: 60
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Application
+          Value: ecr-image-scanner
+
+  ECRImageScannerAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "ECRImageScanner-Errors-${Environment}"
+      AlarmDescription: "Alarm for ECR Image Scanner Lambda function errors"
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 5
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ECRImageScannerFunction
+      TreatMissingData: notBreaching
+
+  ECRImageScannerDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "ECRImageScanner-Duration-${Environment}"
+      AlarmDescription: "Alarm for ECR Image Scanner Lambda function duration"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: !Ref ScanTimeout
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ECRImageScannerFunction
+      TreatMissingData: notBreaching
+
+Outputs:
+  ECRImageScannerFunction:
+    Description: "ECR Image Scanner Lambda Function ARN"
+    Value: !GetAtt ECRImageScannerFunction.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-ECRImageScannerFunction"
+  
+  ECRImageScannerFunctionName:
+    Description: "ECR Image Scanner Lambda Function Name"
+    Value: !Ref ECRImageScannerFunction
+    Export:
+      Name: !Sub "${AWS::StackName}-ECRImageScannerFunctionName"
+  
+  ECRImageScannerApi:
+    Description: "API Gateway endpoint URL for ECR Image Scanner function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/scan/"
+    Export:
+      Name: !Sub "${AWS::StackName}-ECRImageScannerApi"
+  
+  ECRImageScannerDLQ:
+    Description: "Dead Letter Queue ARN for failed scans"
+    Value: !GetAtt ECRImageScannerDLQ.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-ECRImageScannerDLQ"
+  
+  ECRImageScannerLogGroup:
+    Description: "CloudWatch Log Group for Lambda function"
+    Value: !Ref ECRImageScannerLogGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-ECRImageScannerLogGroup"
+  
+  Environment:
+    Description: "Deployment environment"
+    Value: !Ref Environment
+    Export:
+      Name: !Sub "${AWS::StackName}-Environment"

@@ -1,0 +1,204 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bootstrap
+scanner
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+coverage.out
+coverage.html
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# AWS SAM build artifacts
+.aws-sam/
+samconfig.toml
+
+# CloudFormation package artifacts
+packaged-template.yaml
+packaged-template.yml
+
+# Lambda deployment packages
+*.zip
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Test results and reports
+test-results.xml
+test-results.json
+results.json
+response.json
+
+# Performance profiling files
+*.prof
+cpu.prof
+mem.prof
+profile.out
+
+# Documentation build artifacts
+docs/_build/
+docs/site/
+
+# Local development artifacts
+local-test-output/
+debug-output/
+
+# AWS credentials (should never be committed)
+credentials
+config
+.aws/
+
+# Terraform state files (if using Terraform)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Node.js dependencies (if using any Node.js tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python cache (if using any Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Docker artifacts
+.dockerignore
+
+# Local configuration overrides
+local.yaml
+local.yml
+local.json
+override.yaml
+override.yml
+override.json
+
+# Backup files
+*.bak
+*.backup
+
+# Generated documentation
+*.pdf
+*.docx
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache directories
+.cache/
+cache/
+
+# Build artifacts
+bin/
+build/
+dist/
+
+# IDE workspace files
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+Session.vim
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Local test data that shouldn't be committed
+test-data/
+sample-data/
+local-fixtures/
+
+# Generated certificates and keys
+*.pem
+*.key
+*.crt
+*.cert
+
+# Local scripts that might contain sensitive data
+local-*.sh
+private-*.sh
+
+# Benchmark results
+benchmark-*.txt
+benchmark-*.json
+
+# Memory dumps
+*.dump
+*.dmp
+
+# Core dumps
+core.*
+
+# Application specific ignores
+vulndb-cache/
+layer-cache/
+scan-cache/

@@ -1,0 +1,5 @@
+{
+  "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+  "tag": "latest",
+  "scanMode": "basic"
+}

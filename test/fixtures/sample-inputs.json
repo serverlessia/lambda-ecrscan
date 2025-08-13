@@ -1,0 +1,41 @@
+{
+  "basic-scan": {
+    "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+    "tag": "latest",
+    "scanMode": "basic"
+  },
+  "enhanced-scan": {
+    "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+    "tag": "v1.0.0",
+    "scanMode": "enhanced"
+  },
+  "scan-with-filters": {
+    "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/vulnerable-app",
+    "tag": "latest",
+    "scanMode": "enhanced",
+    "severityFilter": "HIGH",
+    "maxFindings": 50,
+    "outputFormat": "summary"
+  },
+  "cross-region-scan": {
+    "imageUrl": "123456789012.dkr.ecr.us-west-2.amazonaws.com/test-repo",
+    "tag": "latest",
+    "region": "us-west-2",
+    "scanMode": "basic"
+  },
+  "timeout-test": {
+    "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/large-image",
+    "tag": "latest",
+    "scanMode": "enhanced",
+    "timeoutSeconds": 600
+  },
+  "debug-scan": {
+    "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+    "tag": "debug",
+    "scanMode": "basic",
+    "config": {
+      "debug": "true",
+      "verbose": "true"
+    }
+  }
+}

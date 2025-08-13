@@ -1,0 +1,215 @@
+{
+  "basic-scan-clean": {
+    "scanResults": {
+      "totalVulnerabilities": 0,
+      "severityCounts": {},
+      "findings": []
+    },
+    "metadata": {
+      "scanId": "test-scan-001",
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+      "tag": "latest",
+      "scanMode": "basic",
+      "scanStartTime": "2024-01-01T00:00:00Z",
+      "scanEndTime": "2024-01-01T00:01:00Z",
+      "databaseInfo": {
+        "lastUpdated": "2024-01-01T00:00:00Z",
+        "version": "test-1.0.0",
+        "sources": ["NVD", "Test Database"]
+      }
+    }
+  },
+  "basic-scan-vulnerable": {
+    "scanResults": {
+      "totalVulnerabilities": 3,
+      "severityCounts": {
+        "CRITICAL": 1,
+        "HIGH": 2
+      },
+      "findings": [
+        {
+          "cve": "CVE-2021-44228",
+          "package": "log4j-core",
+          "version": "2.14.1",
+          "severity": "CRITICAL",
+          "description": "Apache Log4j2 JNDI features do not protect against attacker controlled LDAP",
+          "fixedIn": "2.15.0"
+        },
+        {
+          "cve": "CVE-2022-0778",
+          "package": "openssl",
+          "version": "1.1.1k",
+          "severity": "HIGH",
+          "description": "Infinite loop in BN_mod_sqrt() reachable when parsing certificates",
+          "fixedIn": "1.1.1n"
+        },
+        {
+          "cve": "CVE-2021-3156",
+          "package": "sudo",
+          "version": "1.8.31",
+          "severity": "HIGH",
+          "description": "Heap-based buffer overflow in sudo",
+          "fixedIn": "1.9.5p2"
+        }
+      ]
+    },
+    "metadata": {
+      "scanId": "test-scan-002",
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+      "tag": "latest",
+      "scanMode": "basic",
+      "scanStartTime": "2024-01-01T00:00:00Z",
+      "scanEndTime": "2024-01-01T00:02:30Z",
+      "databaseInfo": {
+        "lastUpdated": "2024-01-01T00:00:00Z",
+        "version": "test-1.0.0",
+        "sources": ["NVD", "Test Database"]
+      }
+    }
+  },
+  "enhanced-scan-comprehensive": {
+    "scanResults": {
+      "totalVulnerabilities": 6,
+      "severityCounts": {
+        "CRITICAL": 2,
+        "HIGH": 3,
+        "LOW": 1
+      },
+      "findings": [
+        {
+          "cve": "CVE-2021-44228",
+          "package": "log4j-core",
+          "version": "2.14.1",
+          "severity": "CRITICAL",
+          "description": "Apache Log4j2 JNDI features do not protect against attacker controlled LDAP",
+          "fixedIn": "2.15.0"
+        },
+        {
+          "cve": "CVE-2021-45046",
+          "package": "log4j-core",
+          "version": "2.14.1",
+          "severity": "CRITICAL",
+          "description": "Apache Log4j2 Thread Context Lookup Pattern vulnerable to remote code execution",
+          "fixedIn": "2.16.0"
+        },
+        {
+          "cve": "CVE-2022-0778",
+          "package": "openssl",
+          "version": "1.1.1k",
+          "severity": "HIGH",
+          "description": "Infinite loop in BN_mod_sqrt() reachable when parsing certificates",
+          "fixedIn": "1.1.1n"
+        },
+        {
+          "cve": "CVE-2021-3712",
+          "package": "openssl",
+          "version": "1.1.1k",
+          "severity": "HIGH",
+          "description": "Read buffer overruns processing ASN.1 strings",
+          "fixedIn": "1.1.1l"
+        },
+        {
+          "cve": "CVE-2021-23017",
+          "package": "nginx",
+          "version": "1.18.0",
+          "severity": "HIGH",
+          "description": "nginx off-by-one in resolver",
+          "fixedIn": "1.20.1"
+        },
+        {
+          "cve": "CVE-2021-22876",
+          "package": "curl",
+          "version": "7.68.0",
+          "severity": "LOW",
+          "description": "curl automatic referer leaks credentials",
+          "fixedIn": "7.76.0"
+        }
+      ]
+    },
+    "metadata": {
+      "scanId": "test-scan-003",
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo",
+      "tag": "v1.0.0",
+      "scanMode": "enhanced",
+      "scanStartTime": "2024-01-01T00:00:00Z",
+      "scanEndTime": "2024-01-01T00:05:45Z",
+      "databaseInfo": {
+        "lastUpdated": "2024-01-01T00:00:00Z",
+        "version": "test-1.0.0",
+        "sources": ["NVD", "GitHub Security Advisories", "Test Database"]
+      }
+    }
+  },
+  "scan-with-filters-summary": {
+    "scanResults": {
+      "totalVulnerabilities": 3,
+      "severityCounts": {
+        "CRITICAL": 2,
+        "HIGH": 1
+      },
+      "findings": [
+        {
+          "cve": "CVE-2021-44228",
+          "package": "log4j-core",
+          "version": "2.14.1",
+          "severity": "CRITICAL",
+          "description": "Apache Log4j2 JNDI features do not protect against attacker controlled LDAP"
+        },
+        {
+          "cve": "CVE-2021-45046",
+          "package": "log4j-core",
+          "version": "2.14.1",
+          "severity": "CRITICAL",
+          "description": "Apache Log4j2 Thread Context Lookup Pattern vulnerable to remote code execution"
+        },
+        {
+          "cve": "CVE-2022-0778",
+          "package": "openssl",
+          "version": "1.1.1k",
+          "severity": "HIGH",
+          "description": "Infinite loop in BN_mod_sqrt() reachable when parsing certificates"
+        }
+      ]
+    },
+    "metadata": {
+      "scanId": "test-scan-004",
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/vulnerable-app",
+      "tag": "latest",
+      "scanMode": "enhanced",
+      "scanStartTime": "2024-01-01T00:00:00Z",
+      "scanEndTime": "2024-01-01T00:03:15Z",
+      "databaseInfo": {
+        "lastUpdated": "2024-01-01T00:00:00Z",
+        "version": "test-1.0.0",
+        "sources": ["NVD", "GitHub Security Advisories", "Test Database"]
+      }
+    }
+  },
+  "error-auth-failure": {
+    "error": "Authentication failed: Unable to get ECR authorization token",
+    "errorCode": "AUTH_ERROR",
+    "details": {
+      "region": "us-east-1",
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/test-repo"
+    },
+    "retryable": true
+  },
+  "error-image-not-found": {
+    "error": "Image not found: The specified image does not exist",
+    "errorCode": "IMAGE_NOT_FOUND",
+    "details": {
+      "imageUrl": "123456789012.dkr.ecr.us-east-1.amazonaws.com/nonexistent-repo",
+      "tag": "latest"
+    },
+    "retryable": false
+  },
+  "error-timeout": {
+    "error": "Scan timeout: Operation exceeded maximum allowed time",
+    "errorCode": "TIMEOUT_ERROR",
+    "details": {
+      "timeoutSeconds": "300",
+      "actualDuration": "305"
+    },
+    "retryable": true
+  }
+}
